@@ -1,8 +1,8 @@
 package monitor.service;
 
-import monitor.entity.MonitorInfo;
+import monitor.entity.SystemMonitor;
 
 public interface MonitorService {
 
-    public MonitorInfo getMonitorInfo();
+    public SystemMonitor getMonitorInfo();
 }

@@ -1,6 +1,6 @@
 package monitor.entity;
 
-public class MonitorInfo {
+public class SystemMonitor {
 
     private long totalMemory;
     private long freeMemory;
