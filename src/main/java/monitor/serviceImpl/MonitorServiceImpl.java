@@ -31,7 +31,7 @@ public class MonitorServiceImpl implements MonitorService {
         for (parentThread = Thread.currentThread().getThreadGroup(); parentThread.getParent() != null; parentThread = parentThread.getParent()) ;
         int totalThread = parentThread.activeCount();
         double cpuRatio = 0;
-        cpuRatio = this.getCpuRateForLinux();
+        cpuRatio = getCpuRatioForWindows();
         SystemMonitor systemMonitor = new SystemMonitor();
         systemMonitor.setFreeMemory(freeMemory);
         systemMonitor.setFreePhysicalMemorySize(freePhysicalMemorySize);
@@ -83,6 +83,29 @@ public class MonitorServiceImpl implements MonitorService {
             }
         } catch (IOException ioException) {
             System.out.println(ioException.getMessage());
+        }
+    }
+    private double getCpuRatioForWindows() {
+        try {
+            String procCmd = System.getenv("windir")
+                    + "\\system32\\wbem\\wmic.exe process get Caption,CommandLine,"
+                    + "KernelModeTime,ReadOperationCount,ThreadCount,UserModeTime,WriteOperationCount";
+            // 取进程信息
+            long[] c0 = readCpu(Runtime.getRuntime().exec(procCmd));
+            Thread.sleep(CPUTIME);
+            long[] c1 = readCpu(Runtime.getRuntime().exec(procCmd));
+            if (c0 != null && c1 != null) {
+                long idletime = c1[0] - c0[0];
+                long busytime = c1[1] - c0[1];
+                return Double.valueOf(
+                        PERCENT * (busytime) / (busytime + idletime))
+                        .doubleValue();
+            } else {
+                return 0.0;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 0.0;
         }
     }
 

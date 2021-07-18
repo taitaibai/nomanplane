@@ -18,7 +18,8 @@ public class MonitorConver {
         return format + "T" + time;
     }
 
-    public void task(BufferedReader bf) {
+    public void task(BufferedReader bf) throws IOException {
+        String task = new StringTokenizer(bf.readLine(), ",").nextToken();
 
     }
 

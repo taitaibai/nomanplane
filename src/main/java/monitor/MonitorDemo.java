@@ -15,8 +15,8 @@ public class MonitorDemo {
 
 
     public static void main(String[] args) {
-        //MonitorService monitorService = new MonitorServiceImpl();
-        //SystemMonitor systemMonitor = monitorService.getMonitorInfo();
+        MonitorService monitorService = new MonitorServiceImpl();
+        SystemMonitor systemMonitor = monitorService.getMonitorInfo();
         BufferedReader br = null;
         StringTokenizer system = null;
         StringTokenizer tasks = null;
