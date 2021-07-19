@@ -31,7 +31,7 @@ public class MonitorServiceImpl implements MonitorService {
         for (parentThread = Thread.currentThread().getThreadGroup(); parentThread.getParent() != null; parentThread = parentThread.getParent()) ;
         int totalThread = parentThread.activeCount();
         double cpuRatio = 0;
-        cpuRatio = getCpuRatioForWindows();
+        cpuRatio = getCpuRateForLinux();
         SystemMonitor systemMonitor = new SystemMonitor();
         systemMonitor.setFreeMemory(freeMemory);
         systemMonitor.setFreePhysicalMemorySize(freePhysicalMemorySize);
