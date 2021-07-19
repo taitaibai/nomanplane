@@ -2,16 +2,14 @@ package monitor.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class MonitorConver {
     private static final SimpleDateFormat ymd=new SimpleDateFormat("yyyy:MM:dd");
-
+    private static final SimpleDateFormat sdf=new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
     /**
      * 当前系统时间
      * @param bf
@@ -19,12 +17,13 @@ public class MonitorConver {
      * @throws IOException
      *
      */
-    public String systemTime(BufferedReader bf) throws IOException {
+    public long systemTime(BufferedReader bf) throws IOException, ParseException {
         Calendar calendar = Calendar.getInstance();
         String format = ymd.format(calendar.getTime());
         String system = new StringTokenizer(bf.readLine(), ",").nextToken();
         String time = system.substring(6, system.indexOf("u"));
-        return format + "T" + time;
+        long timestamp = sdf.parse(format + " " + time).getTime();
+        return timestamp;
     }
 
     /**
