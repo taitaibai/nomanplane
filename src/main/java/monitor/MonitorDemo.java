@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.lang.management.OperatingSystemMXBean;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class MonitorDemo {
@@ -28,13 +29,12 @@ public class MonitorDemo {
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             //system = new StringTokenizer(br.readLine(), ",");
             long systemTime = monitorConver.systemTime(br);
-            List<String> task = monitorConver.task(br);
-            List<String> cpuStatus = monitorConver.cpuStatus(br);
-            List<String> menStatus = monitorConver.menStatus(br);
-            List<String> swapStatus = monitorConver.swapStatus(br);
+            Map<String, Object> task = monitorConver.task(br);
+            Map<String, Object> cpuStatus = monitorConver.cpuStatus(br);
+            Map<String, Object> memStatus = monitorConver.memStatus(br);
+            Map<String, Object> swapStatus = monitorConver.swapStatus(br);
             br.readLine();
-            List<String> everyCommMate = monitorConver.everyCommMate(br);
-
+            String[] everyCommMate = monitorConver.everyCommMate(br);
             while (br.readLine() != null) {
 
             }

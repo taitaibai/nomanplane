@@ -29,14 +29,26 @@ public class MonitorConver {
     /**
      *  Tasks — 任务（进程），系统现在共有183个进程，其中处于运行中的有*个，
      *  *个在休眠（sleep），stoped状态的有*个，zombie状态（僵尸）的有*个。
-     * @param bf
+     * @param br
      * @return
      * @throws IOException
      *
      *
      */
-    public List<String> task(BufferedReader bf) throws IOException {
-        return getStrings(bf);
+    public Map<String, Object> task(BufferedReader br) throws IOException {
+        List<String> strings = getStrings(br);
+        Map<String, Object> map=new HashMap<>();
+        for (int i = 0; i < strings.size(); i++) {
+            if (i == 0) {
+                map.put( "total",strings.get(i).substring(
+                        strings.get(i).indexOf(": ")+1,
+                        strings.get(i).indexOf("total")));
+            } else {
+                String[] split = strings.get(i).split("\\s+");
+                map.put(split[2], split[1]);
+            }
+        }
+        return map;
     }
 
     /**
@@ -52,8 +64,21 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public List<String> cpuStatus(BufferedReader br) throws IOException {
-        return getStrings(br);
+    public Map<String, Object> cpuStatus(BufferedReader br) throws IOException {
+        List<String> strings = getStrings(br);
+        Map<String, Object> map = new HashMap();
+        for (int i = 0; i < strings.size(); i++) {
+            if (i == 0) {
+                map.put("us",
+                        strings.get(i).substring(
+                                strings.get(i).indexOf(": ")+1,
+                                strings.get(i).indexOf("us")));
+            } else {
+                String[] split = strings.get(i).split("\\s+");
+                map.put(split[2], split[1]);
+            }
+        }
+        return map;
     }
 
     /**
@@ -66,8 +91,21 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public List<String> menStatus(BufferedReader br) throws IOException {
-        return getStrings(br);
+    public Map<String, Object> memStatus(BufferedReader br) throws IOException {
+        List<String> strings = getStrings(br);
+        Map<String, Object> map = new HashMap();
+        for (int i = 0; i < strings.size(); i++) {
+            if (i == 0) {
+                map.put("total",
+                        strings.get(i).substring(
+                                strings.get(i).indexOf(": ")+1,
+                                strings.get(i).indexOf("total")));
+            } else {
+                String[] split = strings.get(i).split("\\s+");
+                map.put(split[2], split[1]);
+            }
+        }
+        return map;
     }
 
     /**
@@ -80,8 +118,21 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public List<String> swapStatus(BufferedReader br) throws IOException {
-        return getStrings(br);
+    public Map<String, Object> swapStatus(BufferedReader br) throws IOException {
+        List<String> strings = getStrings(br);
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 0; i < strings.size(); i++) {
+            if (i == 0) {
+                map.put("total",
+                        strings.get(i).substring(
+                                strings.get(i).indexOf(": "),
+                                strings.get(i).indexOf("total")));
+            } else {
+                String[] split = strings.get(i).split("\\s+");
+                map.put(split[2], split[1]);
+            }
+        }
+        return map;
     }
 
     /**
@@ -102,8 +153,9 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public List<String> everyCommMate(BufferedReader br) throws IOException {
-        return getStrings(br);
+    public String[] everyCommMate(BufferedReader br) throws IOException {
+        String[] split = br.readLine().split("\\s+");
+        return split;
     }
 
 
