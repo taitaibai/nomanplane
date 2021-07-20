@@ -129,7 +129,7 @@ public class MonitorConver {
                                 strings.get(i).indexOf("total")));
             } else {
                 String[] split = strings.get(i).split("\\s+");
-                map.put(split[2], split[1]);
+                map.put("\""+split[2]+"\"", split[1]);
             }
         }
         return map;
