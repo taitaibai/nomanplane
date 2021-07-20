@@ -6,7 +6,10 @@ import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
+import org.apache.iotdb.tsfile.write.record.Tablet;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -21,7 +24,8 @@ public class DroneParamUtil {
     private static int rpcPort = 6667;
     private static String username = "root";
     private static String password = "root";
-    private static int poolMaxSize = 10;
+    private static int poolMaxSize = 30;
+
 
     public DroneParamUtil() {
         init();
@@ -36,12 +40,15 @@ public class DroneParamUtil {
 
 
     }
-
     private BigDecimal makeRandom(float max, float min, int scale) {
         BigDecimal random = new BigDecimal(Math.random() * (max - min) + min);
         return random.setScale(scale, RoundingMode.HALF_UP);
     }
 
+    public void insertSystemTablet(Tablet tablet) throws IoTDBConnectionException, StatementExecutionException {
+        sessionPool.insertTablet(tablet);
+        tablet.reset();
+    }
     public void insertTaskStatus(long timestamp, Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
         List<String> measurements = new ArrayList<>();
         List<Object> values = new ArrayList<>();
@@ -52,13 +59,12 @@ public class DroneParamUtil {
             dataTypes.add(TSDataType.TEXT);
         }
         sessionPool.insertRecord(
-                "root.ubuntu.tasks",
+                "root.ubuntu.\"tasks\"",
                 timestamp,
                 measurements,
                 dataTypes,
                 values);
     }
-
     public void insertCpuStatus(long timestamp, Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
         List<String> measurements = new ArrayList<>();
         List<Object> values = new ArrayList<>();

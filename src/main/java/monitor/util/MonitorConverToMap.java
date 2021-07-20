@@ -8,10 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
-public class MonitorConver {
+public class MonitorConverToMap {
     private static final SimpleDateFormat ymd = new SimpleDateFormat("yyyy:MM:dd");
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
 
@@ -41,22 +40,14 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public Tablet task(BufferedReader br, long timestamp) throws IOException {
+    public Map<String, Object> task(BufferedReader br) throws IOException {
         List<String> strings = getStrings(br);
         Map<String, Object> map = new HashMap<>();
-        List<MeasurementSchema> schemas = new ArrayList<>();
-        List<Object> values = new ArrayList<>();
         for (int i = 0; i < strings.size(); i++) {
             String[] split = strings.get(i).split("\\s+");
-            schemas.add(new MeasurementSchema(split[split.length - 1], TSDataType.DOUBLE));
-            values.add(Double.parseDouble(split[split.length - 2]));
+            map.put(split[split.length - 1], split[split.length - 2]);
         }
-        Tablet tablet = new Tablet("root.ubuntu.task", schemas, 1);
-        tablet.addTimestamp(0, timestamp);
-        for (int i = 0; i < schemas.size(); i++) {
-            tablet.addValue(schemas.get(i).getMeasurementId(), 0, values.get(i));
-        }
-        return tablet;
+        return map;
     }
 
     /**
@@ -73,22 +64,15 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public Tablet cpuStatus(BufferedReader br, long timestamp) throws IOException {
+    public Map<String, Object> cpuStatus(BufferedReader br) throws IOException {
         List<String> strings = getStrings(br);
         Map<String, Object> map = new HashMap();
-        List<MeasurementSchema> schemas = new ArrayList<>();
-        List<Object> values = new ArrayList<>();
+
         for (int i = 0; i < strings.size(); i++) {
             String[] split = strings.get(i).split("\\s+");
-            schemas.add(new MeasurementSchema(split[split.length - 1], TSDataType.DOUBLE));
-            values.add(Double.parseDouble(split[split.length - 2]));
+            map.put(split[split.length - 1], split[split.length - 2]);
         }
-        Tablet tablet = new Tablet("root.ubuntu.\"Cpu\"", schemas, 1);
-        tablet.addTimestamp(0, timestamp);
-        for (int i = 0; i < schemas.size(); i++) {
-            tablet.addValue(schemas.get(i).getMeasurementId(), 0, values.get(i));
-        }
-        return tablet;
+        return map;
     }
 
     /**
@@ -102,22 +86,16 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public Tablet memStatus(BufferedReader br, long timestamp) throws IOException {
+    public Map<String, Object> memStatus(BufferedReader br) throws IOException {
         List<String> strings = getStrings(br);
         Map<String, Object> map = new HashMap();
-        List<MeasurementSchema> schemas = new ArrayList<>();
-        List<Object> values = new ArrayList<>();
+
         for (int i = 0; i < strings.size(); i++) {
             String[] split = strings.get(i).split("\\s+");
-            schemas.add(new MeasurementSchema(split[split.length - 1], TSDataType.DOUBLE));
-            values.add(Double.parseDouble(split[split.length - 2]));
+            map.put(split[split.length - 1], split[split.length - 2]);
         }
-        Tablet tablet = new Tablet("root.ubuntu.memstatus", schemas, 1);
-        tablet.addTimestamp(0, timestamp);
-        for (int i = 0; i < schemas.size(); i++) {
-            tablet.addValue(schemas.get(i).getMeasurementId(), 0, values.get(i));
-        }
-        return tablet;
+
+        return map;
     }
 
     /**
@@ -131,30 +109,20 @@ public class MonitorConver {
      * @return
      * @throws IOException
      */
-    public Tablet swapStatus(BufferedReader br, long timestamp) throws IOException {
+    public Map<String, Object> swapStatus(BufferedReader br) throws IOException {
         List<String> strings = getStrings(br);
         Map<String, Object> map = new HashMap<>();
-        List<MeasurementSchema> schemas = new ArrayList<>();
-        List<Object> values = new ArrayList<>();
+
         for (int i = 0; i < strings.size(); i++) {
             String[] split = strings.get(i).split("\\s+");
             if (i == strings.size() - 1) {
-                schemas.add(new MeasurementSchema(split[split.length - 4], TSDataType.DOUBLE));
-                values.add(Double.parseDouble(split[split.length - 5]));
-                schemas.add(new MeasurementSchema("avalimem", TSDataType.DOUBLE));
-                values.add(Double.parseDouble(split[split.length - 3]));
+                map.put("used", split[split.length - 5]);
+                map.put("avalimem", split[split.length - 3]);
             } else {
-                schemas.add(new MeasurementSchema(split[split.length - 1], TSDataType.DOUBLE));
-                values.add(Double.parseDouble(split[split.length - 2]));
+                map.put(split[split.length - 1], split[split.length - 2]);
             }
-
         }
-        Tablet tablet = new Tablet("root.ubuntu.swapstatus", schemas, 1);
-        tablet.addTimestamp(0, timestamp);
-        for (int i = 0; i < schemas.size(); i++) {
-            tablet.addValue(schemas.get(i).getMeasurementId(), 0, values.get(i));
-        }
-        return tablet;
+        return map;
     }
 
     /**
@@ -199,6 +167,4 @@ public class MonitorConver {
         }
         return stringList;
     }
-
-
 }
