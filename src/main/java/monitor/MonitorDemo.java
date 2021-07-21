@@ -14,10 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.management.OperatingSystemMXBean;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class MonitorDemo {
@@ -57,11 +54,6 @@ public class MonitorDemo {
             Map<String, Object> cpuStatus = monitorConverToMap.cpuStatus(br);
             Map<String, Object> memStatus = monitorConverToMap.memStatus(br);
             Map<String, Object> swapStatus = monitorConverToMap.swapStatus(br);
-            /*long systemTime = monitorConver.systemTime(br);
-            Tablet task = monitorConver.task(br,systemTime);
-            Tablet cpuStatus = monitorConver.cpuStatus(br,systemTime);
-            Tablet memStatus = monitorConver.memStatus(br,systemTime);
-            Tablet swapStatus = monitorConver.swapStatus(br,systemTime);*/
             br.readLine();
             //Tablet everyCommMate = monitorConver.everyCommMate(br);
             /*List<Tablet> tablets = new ArrayList<>();

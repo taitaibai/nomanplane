@@ -8,20 +8,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
-public class MessageConsumer implements Runnable{
+public class MessageConsumer implements Runnable {
 
-    BlockingQueue<List<Tablet>> blockingQueue;
+    BlockingQueue<List<Tablet>> tabletBlockingQueue;
+    BlockingQueue<List<Map<String, Object>>> listBlockingQueue;
+    /*public MessageConsumer(BlockingQueue<List<Tablet>> blockingQueue) {
+        this.tabletBlockingQueue = blockingQueue;
+    }*/
 
-    public MessageConsumer(BlockingQueue<List<Tablet>> blockingQueue) {
-        this.blockingQueue = blockingQueue;
+    public MessageConsumer(BlockingQueue<List<Map<String, Object>>> listBlockingQueue) {
+        this.listBlockingQueue = listBlockingQueue;
     }
 
     @Override
     public void run() {
-        consume(blockingQueue);
+        //tabletConsume();
+        listMapConsume(listBlockingQueue);
     }
 
-    private void consume(BlockingQueue<List<Tablet>> queue) {
+    private void listMapConsume(BlockingQueue<List<Map<String, Object>>> listBlockingQueue) {
+        while (true) {
+            try {
+                List<Map<String, Object>> mapList = listBlockingQueue.take();
+                Object timestamp = mapList.get(0).get("systemtime");
+                DroneParamUtil droneParamUtil = new DroneParamUtil();
+                droneParamUtil.insertTaskStatus((Long) timestamp,mapList.get(1));
+                droneParamUtil.insertCpuStatus((Long) timestamp,mapList.get(2));
+                droneParamUtil.insertMemStatus((Long) timestamp,mapList.get(3));
+                droneParamUtil.insertSwapStatus((Long) timestamp,mapList.get(4));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IoTDBConnectionException e) {
+                e.printStackTrace();
+            } catch (StatementExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void tabletConsume(BlockingQueue<List<Tablet>> queue) {
         while (true) {
             try {
                 List<Tablet> tablets = queue.take();

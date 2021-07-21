@@ -51,7 +51,7 @@ public class MonitorConver {
             schemas.add(new MeasurementSchema(split[split.length - 1], TSDataType.DOUBLE));
             values.add(Double.parseDouble(split[split.length - 2]));
         }
-        Tablet tablet = new Tablet("root.ubuntu.task", schemas, 1);
+        Tablet tablet = new Tablet("root.ubuntu.tasks", schemas, 1);
         tablet.addTimestamp(0, timestamp);
         for (int i = 0; i < schemas.size(); i++) {
             tablet.addValue(schemas.get(i).getMeasurementId(), 0, values.get(i));
