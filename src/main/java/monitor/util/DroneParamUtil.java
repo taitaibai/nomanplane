@@ -1,7 +1,6 @@
 package monitor.util;
 
 
-import monitor.session.IoTDBSession;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
@@ -19,27 +18,37 @@ import java.util.Random;
 
 public class DroneParamUtil {
 
-    private static SessionPool sessionPool;
-    private static String host = "127.0.0.1";
-    private static int rpcPort = 6667;
-    private static String username = "root";
-    private static String password = "root";
-    private static int poolMaxSize = 30;
+    private SessionPool sessionPool;
 
-
-    public DroneParamUtil() {
-        init();
+    public DroneParamUtil(SessionPool sessionPool) {
+        this.sessionPool = sessionPool;
     }
 
-    private static void init() {
-
-        sessionPool = new SessionPool(host, rpcPort, username, password, poolMaxSize);
+    public void simulate() throws IoTDBConnectionException, StatementExecutionException {
+        long currentTimeMillis = System.currentTimeMillis();
+        List<String> measurements = new ArrayList<>();
+        List<TSDataType> dataTypes = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        int cs = 10;
+        measurements.add("发动机低压转子转速");
+        measurements.add("发动机高压转子转速");
+        measurements.add("发动机低压涡轮后燃气温度");
+        measurements.add("发动机出口压力");
+        for (int i = 0; i < cs; i++) {
+            if (i > 3) {
+                measurements.add("s" + (i + 1));
+            }
+            dataTypes.add(TSDataType.DOUBLE);
+            values.add(makeRandom(1000, 100, 2));
+        }
+        sessionPool.insertRecord(
+                "root.drone.\"发动机系统\"",
+                currentTimeMillis,
+                measurements,
+                dataTypes,
+                values);
     }
 
-    public void simulate() {
-
-
-    }
     private BigDecimal makeRandom(float max, float min, int scale) {
         BigDecimal random = new BigDecimal(Math.random() * (max - min) + min);
         return random.setScale(scale, RoundingMode.HALF_UP);
@@ -49,6 +58,7 @@ public class DroneParamUtil {
         sessionPool.insertTablet(tablet);
         tablet.reset();
     }
+
     public void insertTaskStatus(long timestamp, Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
         List<String> measurements = new ArrayList<>();
         List<Object> values = new ArrayList<>();
@@ -65,6 +75,7 @@ public class DroneParamUtil {
                 dataTypes,
                 values);
     }
+
     public void insertCpuStatus(long timestamp, Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
         List<String> measurements = new ArrayList<>();
         List<Object> values = new ArrayList<>();

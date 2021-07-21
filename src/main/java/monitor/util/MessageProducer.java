@@ -28,11 +28,11 @@ public class MessageProducer implements Runnable {
     @Override
     public void run() {
 
-        //tabletProduce(queue);
-        listMapProduce(listBlockingQueue);
+        //tabletProduce();
+        listMapProduce();
     }
 
-    private void listMapProduce(BlockingQueue<List<Map<String, Object>>> listBlockingQueue) {
+    private void listMapProduce() {
         while (true) {
             BufferedReader br = null;
             MonitorConver monitorConver = null;
@@ -41,50 +41,19 @@ public class MessageProducer implements Runnable {
                 Process process = Runtime.getRuntime().exec("top -b n 1");
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 monitorConverToMap = new MonitorConverToMap();
-                long systemTime = monitorConverToMap.systemTime(br);
-                Map<String, Object> task = monitorConverToMap.task(br);
-                Map<String, Object> cpuStatus = monitorConverToMap.cpuStatus(br);
-                Map<String, Object> memStatus = monitorConverToMap.memStatus(br);
-                Map<String, Object> swapStatus = monitorConverToMap.swapStatus(br);
-                br.readLine();
-                List<Map<String, Object>> mapList = new ArrayList<>();
-                mapList.add((Map<String, Object>) new HashMap<>().put("systemtime", systemTime));
-                mapList.add(task);
-                mapList.add(cpuStatus);
-                mapList.add(memStatus);
-                mapList.add(swapStatus);
-                listBlockingQueue.put(mapList);
-                DroneParamUtil droneParamUtil = new DroneParamUtil();
-                droneParamUtil.insertTaskStatus(systemTime, task);
-                droneParamUtil.insertCpuStatus(systemTime, cpuStatus);
-                droneParamUtil.insertCpuStatus(systemTime, memStatus);
-                droneParamUtil.insertCpuStatus(systemTime, swapStatus);
+                List<Map<String, Object>> maps = monitorConverToMap.getMaps(br);
+                listBlockingQueue.put(maps);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
-                e.printStackTrace();/* try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-            } catch (IoTDBConnectionException e) {
-                e.printStackTrace();
-            } catch (StatementExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("QUEUE SIZE:" + queue.size());
-
-           /* try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
         }
     }
 
-    private void tabletProduce(BlockingQueue<List<Tablet>> queue) {
+    private void tabletProduce() {
         while (true) {
             BufferedReader br = null;
             try {

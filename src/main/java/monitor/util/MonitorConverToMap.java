@@ -167,4 +167,21 @@ public class MonitorConverToMap {
         }
         return stringList;
     }
+
+    public List<Map<String, Object>> getMaps(BufferedReader br) throws IOException, ParseException {
+        long systemTime = systemTime(br);
+        Map<String, Object> task = task(br);
+        Map<String, Object> cpuStatus = cpuStatus(br);
+        Map<String, Object> memStatus = memStatus(br);
+        Map<String, Object> swapStatus = swapStatus(br);
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        Map<String, Object> time=new HashMap<>();
+        time.put("systemtime", systemTime);
+        mapList.add(time);
+        mapList.add(task);
+        mapList.add(cpuStatus);
+        mapList.add(memStatus);
+        mapList.add(swapStatus);
+        return mapList;
+    }
 }
