@@ -30,10 +30,10 @@ public class DroneParamUtil {
         List<TSDataType> dataTypes = new ArrayList<>();
         List<Object> values = new ArrayList<>();
         int cs = 10;
-        measurements.add("发动机低压转子转速");
-        measurements.add("发动机高压转子转速");
-        measurements.add("发动机低压涡轮后燃气温度");
-        measurements.add("发动机出口压力");
+        measurements.add("\"发动机低压转子转速\"");
+        measurements.add("\"发动机高压转子转速\"");
+        measurements.add("\"发动机低压涡轮后燃气温度\"");
+        measurements.add("\"发动机出口压力\"");
         for (int i = 0; i < cs; i++) {
             if (i > 3) {
                 measurements.add("s" + (i + 1));
