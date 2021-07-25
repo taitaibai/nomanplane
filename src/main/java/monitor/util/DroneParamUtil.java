@@ -39,7 +39,7 @@ public class DroneParamUtil {
                 measurements.add("s" + (i + 1));
             }
             dataTypes.add(TSDataType.DOUBLE);
-            values.add(makeRandom(1000, 100, 2));
+            values.add(makeRandom(1000, 100, 2).doubleValue());
         }
         sessionPool.insertRecord(
                 "root.drone.\"发动机系统\"",
@@ -50,6 +50,7 @@ public class DroneParamUtil {
     }
 
     private BigDecimal makeRandom(float max, float min, int scale) {
+        //Double r = new Double(Math.random() * (max - min) + min);
         BigDecimal random = new BigDecimal(Math.random() * (max - min) + min);
         return random.setScale(scale, RoundingMode.HALF_UP);
     }
