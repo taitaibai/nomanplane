@@ -44,6 +44,7 @@ public class MessageConsumer implements Runnable {
                 droneParamUtil.insertCpuStatus((Long) timestamp,mapList.get(2));
                 droneParamUtil.insertMemStatus((Long) timestamp,mapList.get(3));
                 droneParamUtil.insertSwapStatus((Long) timestamp,mapList.get(4));
+                droneParamUtil.insertNetStatus(mapList.get(5));
                 droneParamUtil.simulate();
             } catch (Exception e) {
                 e.printStackTrace();

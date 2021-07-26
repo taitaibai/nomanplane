@@ -158,6 +158,20 @@ public class MonitorConverToMap {
         return null;
     }
 
+    public Map<String, Object> netStatus(BufferedReader br) throws IOException {
+        br.readLine();
+        br.readLine();
+        br.readLine();
+        br.readLine();
+        br.readLine();
+        String[] mesuments = br.readLine().split("\\s+");
+        String[] values = br.readLine().split("\\s+");
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 2; i < mesuments.length; i++) {
+            map.put(mesuments[i], values[i]);
+        }
+        return map;
+    }
 
     private List<String> getStrings(BufferedReader br) throws IOException {
         StringTokenizer getStrings = new StringTokenizer(br.readLine(), ",");
@@ -168,20 +182,22 @@ public class MonitorConverToMap {
         return stringList;
     }
 
-    public List<Map<String, Object>> getMaps(BufferedReader br) throws IOException, ParseException {
+    public List<Map<String, Object>> getMaps(BufferedReader br,BufferedReader net) throws IOException, ParseException {
         long systemTime = systemTime(br);
         Map<String, Object> task = task(br);
         Map<String, Object> cpuStatus = cpuStatus(br);
         Map<String, Object> memStatus = memStatus(br);
         Map<String, Object> swapStatus = swapStatus(br);
+        Map<String, Object> netStatus = netStatus(net);
         List<Map<String, Object>> mapList = new ArrayList<>();
-        Map<String, Object> time=new HashMap<>();
+        Map<String, Object> time = new HashMap<>();
         time.put("systemtime", systemTime);
         mapList.add(time);
         mapList.add(task);
         mapList.add(cpuStatus);
         mapList.add(memStatus);
         mapList.add(swapStatus);
+        mapList.add(netStatus);
         return mapList;
     }
 }

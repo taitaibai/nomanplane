@@ -35,19 +35,18 @@ public class MessageProducer implements Runnable {
     private void listMapProduce() {
         while (true) {
             BufferedReader br = null;
+            BufferedReader net = null;
             MonitorConver monitorConver = null;
             MonitorConverToMap monitorConverToMap = null;
             try {
                 Process process = Runtime.getRuntime().exec("top -b n 1");
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                Process iperfProc = Runtime.getRuntime().exec("iperf -c 192.168.98.30");
+                net = new BufferedReader(new InputStreamReader(iperfProc.getInputStream()));
                 monitorConverToMap = new MonitorConverToMap();
-                List<Map<String, Object>> maps = monitorConverToMap.getMaps(br);
+                List<Map<String, Object>> maps = monitorConverToMap.getMaps(br,net);
                 listBlockingQueue.put(maps);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

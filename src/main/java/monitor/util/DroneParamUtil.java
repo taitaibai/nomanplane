@@ -109,6 +109,7 @@ public class DroneParamUtil {
                 measurements,
                 dataTypes,
                 values);
+
     }
 
     public void insertSwapStatus(long timestamp, Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
@@ -126,6 +127,26 @@ public class DroneParamUtil {
                 measurements,
                 dataTypes,
                 values);
+    }
+
+    public void insertNetStatus(Map<String, Object> map) throws IoTDBConnectionException, StatementExecutionException {
+        long timestamp = System.currentTimeMillis();
+        List<String> measurements = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        List<TSDataType> dataTypes = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            measurements.add("\"" + entry.getKey() + "\"");
+            values.add(entry.getValue());
+            dataTypes.add(TSDataType.TEXT);
+        }
+
+        sessionPool.insertRecord(
+                "root.ubuntu.netstatus",
+                timestamp,
+                measurements,
+                dataTypes,
+                values
+        );
     }
 
 

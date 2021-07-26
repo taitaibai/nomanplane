@@ -8,7 +8,7 @@ import java.util.List;
 
 public class IoTDBPool {
     private static SessionPool sessionPool;
-    private static String host = "192.168.98.30";
+    private static String host = "171.221.206.201";
     private static int rpcPort = 6667;
     private static String username = "root";
     private static String password = "root";
